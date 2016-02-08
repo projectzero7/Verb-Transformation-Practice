@@ -1,3 +1,4 @@
+package GUI;
 // Statistics tracker
 public final class Statistics {
 	// Declare variables
