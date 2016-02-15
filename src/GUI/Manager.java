@@ -2,9 +2,18 @@ package GUI;
 
 //Import needed files
 import java.awt.Font;
+import java.io.BufferedReader;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.io.IOException;
+import java.io.InputStreamReader;
+import java.util.Collections;
+import java.util.Random;
+import java.util.Vector;
 
 import javax.swing.JButton;
 import javax.swing.JFrame;
+import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JTextArea;
 
@@ -24,8 +33,12 @@ public class Manager {
 	final private int BUTTON_WIDTH = 300;
 	final private int BUTTON_HEIGHT = 50;
 	
+	private int NUM_QUESTIONS = 50;
+	
 	// Declare variables
 	private int current_menu;
+	
+	Statistics stats;
 	
 	JFrame window;
 	JPanel content;
@@ -38,6 +51,11 @@ public class Manager {
 	JTextArea txtboxError;
 	JTextArea txtboxQuestionVerb;
 	JTextArea txtboxInputVerb;
+	
+	Vector< Vector< String > > verbMatrix;
+	String correctAnswer;
+	int current_question;
+	Random rand;
 	
 	// Constructor
 	public Manager() {
@@ -129,6 +147,18 @@ public class Manager {
 				
 				current_menu = MENU_PRACTICE_VERB;
 				
+				// Initialize variables
+				verbMatrix = new Vector< Vector< String > >();
+				stats = new Statistics();
+				rand = new Random();
+				
+				// Read a text file for questions and answers
+				getVerbsFromFile();
+				
+				// Start from the first question
+				current_question = 0;
+				nextVerb();
+				
 				break;
 				
 			default:
@@ -148,18 +178,100 @@ public class Manager {
 		content.repaint();
 	}
 	
+	// Read in the verbs from a text file
+	public void getVerbsFromFile() {
+		// TODO: specify which file
+		String filename = "verbs.txt";
+		
+		try {
+			// Open the file to read from
+			BufferedReader reader = new BufferedReader( new InputStreamReader ( new FileInputStream( filename ), "UTF8" ) );
+			
+			// Read each line of the file
+			String line;
+			while ( ( line = reader.readLine() ) != null ) {
+				Vector< String > verbEntry = new Vector< String >();
+				
+				// Split the line by tabs
+				String[] conjugations = line.split( "\t" );
+				Collections.addAll( verbEntry, conjugations );
+				
+				// Add the new verb to the matrix
+				verbMatrix.add( verbEntry );
+			}
+			
+			// Close the reader resource
+			reader.close();
+			
+		} catch (FileNotFoundException e) {
+			// Display error and quit
+			JOptionPane.showMessageDialog(content, "File " + filename + " not found", "Error", JOptionPane.ERROR_MESSAGE);
+			System.exit( 1 );
+			
+		} catch (IOException e) {
+			// Display error and quit
+			JOptionPane.showMessageDialog(content, "An error occurred while reading " + filename, "Error", JOptionPane.ERROR_MESSAGE);
+			System.exit( 1 );
+		}
+		
+		// Make the number of questions safe
+		NUM_QUESTIONS = Math.min( ( verbMatrix.size() - 1 ) * ( verbMatrix.get(0).size() ), NUM_QUESTIONS );
+	}
+	
+	// Choose a random verb from the verb matrix
+	public void nextVerb() {
+		current_question++;
+		
+		int columnMax = verbMatrix.get(0).size();
+		int rowMax = verbMatrix.size();
+		
+		if ( current_question <= NUM_QUESTIONS ) {
+			correctAnswer = null;
+			
+			int row = 0;
+			int column = 0;
+			/*
+			 * Super-inefficient algorithm that nobody will
+			 * (hopefully) notice
+			 */
+			while (correctAnswer == null) {
+				row = rand.nextInt(rowMax - 1) + 1;	// from 1 to the max number of rows
+				column = rand.nextInt(columnMax - 0) + 0;	// from 0 to the max number of columns
+				
+				correctAnswer = verbMatrix.get( row ).get( column );
+			}
+			
+			txtboxQuestionVerb.setText( "What is the " + verbMatrix.get( 0 ).get( column ) + " conjugation of " + verbMatrix.get( row ).get( 0 ) + "?" );
+			
+			verbMatrix.get( row ).set( column, null );
+		} else {
+			// go to statistics menu
+			JOptionPane.showMessageDialog(content, stats.getResults(), "Results", JOptionPane.ERROR_MESSAGE);
+			System.exit( 1 );
+			
+			// Clear the statistics for the next run
+			stats.clearResults();
+		}
+	}
+	
 	// Execute the verb transformation practice
-	public void runVerbTransformation() {
-		System.out.println( "Moving on..." );	// DEBUG
+	public void checkAnswer() {
+		// Get text from txtboxInputVerb
+		String answer = txtboxInputVerb.getText();
+		answer = answer.replaceAll( "\\s+", "" );	// Japanese has no whitespace
 		
-		// get text from txtboxInputVerb
-		
-		// compare to stored answer
-			// log to Statistics
+		// Determine the results and log to statistics
+		if ( answer.equals( correctAnswer ) ) {
+			stats.gotCorrect();
+			
+		} else {
+			stats.gotIncorrect( answer, correctAnswer );
+		}
 		
 		// Clear the input box
 		txtboxInputVerb.setText( "" );
 		
-		// go to next verb
+		// Go to the next verb
+		nextVerb();
 	}
 }

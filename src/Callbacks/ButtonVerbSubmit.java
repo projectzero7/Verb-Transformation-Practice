@@ -24,6 +24,6 @@ public class ButtonVerbSubmit implements ActionListener {
 	@Override
 	public void actionPerformed( ActionEvent e ) {
 		// Have the Manager go to the main menu
-		myManager.runVerbTransformation();
+		myManager.checkAnswer();
 	}
 }
