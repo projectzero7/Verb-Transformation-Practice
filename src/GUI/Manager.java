@@ -242,6 +242,7 @@ public class Manager {
 			}
 			
 			txtboxQuestionVerb.setText( "What is the " + verbMatrix.get( 0 ).get( column ) + " conjugation of " + verbMatrix.get( row ).get( 0 ) + "?" );
+			correctAnswer = correctAnswer.replaceAll( "\\s+", "" );
 			
 			verbMatrix.get( row ).set( column, null );
 		} else {
