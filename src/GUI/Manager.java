@@ -18,6 +18,7 @@ import javax.swing.JPanel;
 import javax.swing.JTextArea;
 
 import Callbacks.*;
+import Helpers.textJPtoEN;
 
 // Control the program flow
 public class Manager {
@@ -244,6 +245,10 @@ public class Manager {
 			txtboxQuestionVerb.setText( "What is the " + verbMatrix.get( 0 ).get( column ) + " conjugation of " + verbMatrix.get( row ).get( 0 ) + "?" );
 			correctAnswer = correctAnswer.replaceAll( "\\s+", "" );
 			
+			if ( !textJPtoEN.isEnglish( correctAnswer ) ) {
+				correctAnswer = textJPtoEN.convert( correctAnswer );
+			}
+			
 			verbMatrix.get( row ).set( column, null );
 		} else {
 			// go to statistics menu
@@ -260,7 +265,10 @@ public class Manager {
 		// Get text from txtboxInputVerb
 		String answer = txtboxInputVerb.getText();
 		answer = answer.replaceAll( "\\s+", "" );	// Japanese has no whitespace
-		
+		if ( !textJPtoEN.isEnglish( answer ) ) {
+			answer = textJPtoEN.convert( answer );	// make sure to do comparisons in EN
+		}
+
 		// Determine the results and log to statistics
 		if ( answer.equals( correctAnswer ) ) {
 			stats.gotCorrect();
