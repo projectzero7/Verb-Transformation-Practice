@@ -119,6 +119,7 @@ public class Manager {
 		window = new JFrame();
 		window.setContentPane( content );
 		window.setSize( SCREEN_WIDTH, SCREEN_HEIGHT );
+		window.setLocationRelativeTo( null );
 		window.setDefaultCloseOperation( JFrame.EXIT_ON_CLOSE );
 		window.setVisible( true );
 		
@@ -143,6 +144,13 @@ public class Manager {
 				break;
 				
 			case MENU_PRACTICE_VERB:
+				// Get a file name from the user
+				String filename = JOptionPane.showInputDialog("Please input a file name to read verbs from: ");
+				if ( filename == null ) {
+					switchMenu( MENU_MAIN );
+					return;
+				}
+				
 				// Attach this menu's components
 				content.add( txtboxQuestionVerb );
 				content.add( txtboxInputVerb );
@@ -156,7 +164,7 @@ public class Manager {
 				rand = new Random();
 				
 				// Read a text file for questions and answers
-				getVerbsFromFile();
+				getVerbsFromFile( filename );
 				
 				// Start from the first question
 				current_question = 0;
@@ -182,10 +190,7 @@ public class Manager {
 	}
 	
 	// Read in the verbs from a text file
-	public void getVerbsFromFile() {
-		// TODO: specify which file
-		String filename = "verbs.txt";
-		
+	public void getVerbsFromFile( String filename ) {
 		try {
 			// Open the file to read from
 			BufferedReader reader = new BufferedReader( new InputStreamReader ( new FileInputStream( filename ), "UTF8" ) );
