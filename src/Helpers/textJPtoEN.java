@@ -204,4 +204,39 @@ public final class textJPtoEN {
 		
 		return sb.toString();
 	}
+	
+	// Check if a string is already converted
+	public static boolean isEnglish( String input ) {
+		/*
+		 * We will perform a quick check to see if either the
+		 * first two or three letters in the input match anything
+		 * in the English syllable tables. If there is a match,
+		 * it must already be in English.
+		 * 
+		 * Ignore the possibility of mixed case or languages other
+		 * than EN and JP.
+		 */
+		String check1 = input.substring( 0, Math.min( 2, input.length() ) );
+		String check2 = input.substring( 0, Math.min( 3, input.length() ) );
+		
+		for ( String s : syllablesEnNormal ) {
+			if ( check1.equals( s )  || check2.equals( s ) ) {
+				return true;
+			}
+		}
+		
+		for ( String s : syllablesEnDiacritical ) {
+			if ( check1.equals( s )  || check2.equals( s ) ) {
+				return true;
+			}
+		}
+		
+		for ( String s : syllablesEnSmall ) {
+			if ( check1.equals( s )  || check2.equals( s ) ) {
+				return true;
+			}
+		}
+		
+		return false;
+	}
 }
