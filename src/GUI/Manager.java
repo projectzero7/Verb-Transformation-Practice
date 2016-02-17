@@ -34,6 +34,8 @@ public class Manager {
 	final private int BUTTON_WIDTH = 300;
 	final private int BUTTON_HEIGHT = 50;
 	
+	final private String DELIMITER = "(:|;|：|；){1}";
+	
 	private int NUM_QUESTIONS = 50;
 	
 	// Declare variables
@@ -194,7 +196,7 @@ public class Manager {
 				Vector< String > verbEntry = new Vector< String >();
 				
 				// Split the line by tabs
-				String[] conjugations = line.split( "\t" );
+				String[] conjugations = line.split( DELIMITER );
 				Collections.addAll( verbEntry, conjugations );
 				
 				// Add the new verb to the matrix
@@ -216,7 +218,7 @@ public class Manager {
 		}
 		
 		// Make the number of questions safe
-		NUM_QUESTIONS = Math.min( ( verbMatrix.size() - 1 ) * ( verbMatrix.get(0).size() ), NUM_QUESTIONS );
+		NUM_QUESTIONS = Math.min( ( verbMatrix.size() - 1 ) * ( verbMatrix.get(0).size() - 1 ), NUM_QUESTIONS );
 	}
 	
 	// Choose a random verb from the verb matrix
@@ -237,7 +239,7 @@ public class Manager {
 			 */
 			while (correctAnswer == null) {
 				row = rand.nextInt(rowMax - 1) + 1;	// from 1 to the max number of rows
-				column = rand.nextInt(columnMax - 0) + 0;	// from 0 to the max number of columns
+				column = rand.nextInt(columnMax - 1) + 1;	// from 1 to the max number of columns
 				
 				correctAnswer = verbMatrix.get( row ).get( column );
 			}
@@ -268,6 +270,8 @@ public class Manager {
 		if ( !textJPtoEN.isEnglish( answer ) ) {
 			answer = textJPtoEN.convert( answer );	// make sure to do comparisons in EN
 		}
+		
+		System.out.println( answer + " | " + correctAnswer );
 
 		// Determine the results and log to statistics
 		if ( answer.equals( correctAnswer ) ) {
