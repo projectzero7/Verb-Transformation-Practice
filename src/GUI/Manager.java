@@ -15,6 +15,7 @@ import javax.swing.JButton;
 import javax.swing.JFrame;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
+import javax.swing.JScrollPane;
 import javax.swing.JTextArea;
 
 import Callbacks.*;
@@ -54,6 +55,10 @@ public class Manager {
 	JTextArea txtboxError;
 	JTextArea txtboxQuestionVerb;
 	JTextArea txtboxInputVerb;
+	JTextArea txtboxStatisticsTotals;
+	JTextArea txtboxStatisticsMissed;
+	
+	JScrollPane scrollStatisticsMissed;
 	
 	Vector< Vector< String > > verbMatrix;
 	String correctAnswer;
@@ -110,6 +115,19 @@ public class Manager {
 		txtboxInputVerb.setBounds( 30, 300, SCREEN_WIDTH - 90, 25 );
 		txtboxInputVerb.setFont( fnt );
 		txtboxInputVerb.setEditable( true );
+		
+		txtboxStatisticsTotals = new JTextArea( "" );
+		txtboxStatisticsTotals.setBounds( button_align_x - 50, 150, BUTTON_WIDTH + 50, BUTTON_HEIGHT );
+		txtboxStatisticsTotals.setFont( fnt );
+		txtboxStatisticsTotals.setEditable( false );
+		
+		txtboxStatisticsMissed = new JTextArea( "" );
+		txtboxStatisticsMissed.setBounds( 30, 350, SCREEN_WIDTH - 90, 150 );
+		txtboxStatisticsMissed.setFont( fnt );
+		txtboxStatisticsMissed.setEditable( false );
+		
+		scrollStatisticsMissed = new JScrollPane(txtboxStatisticsMissed, JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED, JScrollPane.HORIZONTAL_SCROLLBAR_NEVER);
+		scrollStatisticsMissed.setBounds( 30, 350, SCREEN_WIDTH - 90, 150 );
 		
 		// Initialize component handler
 		content = new JPanel();
@@ -169,6 +187,28 @@ public class Manager {
 				// Start from the first question
 				current_question = 0;
 				nextVerb();
+				
+				break;
+			case MENU_STATISTICS_VERB:
+				// Put the totals on the screen
+				txtboxStatisticsTotals.setText( stats.getResults() );
+				content.add( txtboxStatisticsTotals );
+				
+				// Display the verbs missed with the submitted answer
+				String str = "";
+				Vector<String> missedVerbs = stats.getMissedQuestions();
+				for (int i = 0; i < missedVerbs.size(); i += 2) {
+					str += "\"" + missedVerbs.get( i ) + "\" -> \"" + missedVerbs.get( i + 1 ) + "\"";
+					
+					if (i < missedVerbs.size() - 2) {
+						str += "\n";
+					}
+				}
+				txtboxStatisticsMissed.setText( str );
+				content.add( scrollStatisticsMissed );
+				
+				// Add a button returns to the main menu
+				content.add( btnMainMenu );
 				
 				break;
 				
@@ -259,8 +299,7 @@ public class Manager {
 			verbMatrix.get( row ).set( column, null );
 		} else {
 			// go to statistics menu
-			JOptionPane.showMessageDialog(content, stats.getResults(), "Results", JOptionPane.ERROR_MESSAGE);
-			System.exit( 1 );
+			switchMenu( MENU_STATISTICS_VERB );
 			
 			// Clear the statistics for the next run
 			stats.clearResults();
@@ -275,8 +314,6 @@ public class Manager {
 		if ( !textJPtoEN.isEnglish( answer ) ) {
 			answer = textJPtoEN.convert( answer );	// make sure to do comparisons in EN
 		}
-		
-		System.out.println( answer + " | " + correctAnswer );
 
 		// Determine the results and log to statistics
 		if ( answer.equals( correctAnswer ) ) {
