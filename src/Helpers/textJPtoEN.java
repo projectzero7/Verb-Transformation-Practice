@@ -17,7 +17,7 @@ import java.util.List;
  */
 public final class textJPtoEN {
 	// Declare variables
-	private final static String[] syllablesJpNormal = {
+	private final static String[] syllablesJpNormalHir = {
 		"あ",	"い",	"う",		"え",	"お",
 		"か",	"き",	"く",		"け",	"こ",
 		"さ",	"し",	"す",	"せ",	"そ",
@@ -30,14 +30,14 @@ public final class textJPtoEN {
 		"わ",							"を",
 										"ん"
 	};
-	private final static String[] syllablesJpDiacritical = {
+	private final static String[] syllablesJpDiacriticalHir = {
 		"が",	"ぎ",	"ぐ",		"げ",	"ご",
 		"ざ",	"じ",	"ず",	"ぜ",	"ぞ",
 		"だ",	"ぢ",	"づ",	"で",	"ど",
 		"ば",	"び",	"ぶ",	"べ",	"ぼ",
 		"ぱ",	"ぴ",	"ぷ",	"ぺ",	"ぽ"
 	};
-	private final static String[] syllablesJpSmall = {
+	private final static String[] syllablesJpSmallHir = {
 		"きゃ",			"きゅ",			"きょ",
 		"しゃ",			"しゅ",			"しょ",
 		"ちゃ",			"ちゅ",			"ちょ",
@@ -51,7 +51,40 @@ public final class textJPtoEN {
 		"びゃ",			"びゅ",			"びょ",
 		"ぴゃ",			"ぴゅ",			"ぴょ"
 	};
-	// TODO: katakana
+	private final static String[] syllablesJpNormalKat = {
+		"ア",	"イ",	"ウ",	"エ",	"オ",
+		"カ",	"キ",	"ク",	"ケ",	"コ",
+		"サ",	"シ",	"ス",	"セ",	"ソ",
+		"タ",	"チ",	"ツ",	"テ",	"ト",
+		"ナ",	"ニ",	"ヌ",	"ネ",	"ノ",
+		"ハ",	"ヒ",	"フ",	"ヘ",	"ホ",
+		"マ",	"ミ",		"ム",	"メ",	"モ",
+		"ヤ",			"ユ",			"ヨ",
+		"ラ",	"リ",		"ル",	"レ",	"ロ",
+		"ワ",							"ヲ",
+										"ン"
+	};
+	private final static String[] syllablesJpDiacriticalKat = {
+		"ガ",	"ギ",	"グ",	"ゲ",	"ゴ",
+		"ザ",	"ジ",	"ズ",	"ゼ",	"ゾ",
+		"ダ",	"ヂ",	"ヅ",	"デ",	"ド",
+		"バ",	"ビ",	"ブ",	"ベ",	"ボ",
+		"パ",	"ピ",	"プ",	"ペ",	"ポ"
+	};
+	private final static String[] syllablesJpSmallKat = {
+		"キャ",			"キュ",			"キョ",
+		"シャ",			"シュ",			"ショ",
+		"チャ",			"シュ",			"チョ",
+		"ニャ",			"ニュ",			"ニョ",
+		"ヒャ",			"ヒュ",			"ヒョ",
+		"ミャ",			"ミュ",			"ミョ",
+		"リャ",			"リュ",			"リョ",
+		"ギャ",			"ギュ",			"ギョ",
+		"ジャ",			"ジュ",			"ジョ",
+		"ヂャ",			"ヂュ",			"ヂョ",
+		"ビャ",			"ビュ",			"ビョ",
+		"ピャ",			"ピュ",			"ピョ"
+	};
 	private final static String[] syllablesEnNormal = {
 		"a",	"i",	"u",	"e",	"o",
 		"ka",	"ki",	"ku",	"ke",	"ko",
@@ -102,7 +135,8 @@ public final class textJPtoEN {
 		String[] tempInput = new String[ splitInput.length ];
 		boolean augmentedSyllable = false;
 		for ( int i = splitInput.length - 1; i >= 0; i-- ) {
-			if ( splitInput[ i ].equals("ゃ") || splitInput[ i ].equals("ゅ") || splitInput[ i ].equals("ょ") ) {
+			if ( splitInput[ i ].equals("ゃ") || splitInput[ i ].equals("ゅ") || splitInput[ i ].equals("ょ") ||
+				splitInput[ i ].equals("ャ") || splitInput[ i ].equals("ュ") || splitInput[ i ].equals("ョ") ) {
 				// Store the small syllable for the next iteration
 				temp = splitInput[ i ];
 				augmentedSyllable = true;
@@ -135,9 +169,9 @@ public final class textJPtoEN {
 		boolean found;
 		boolean doubleLetter = false;
 		int inputLength = splitInput.length;
-		int syllablesNormalLength = syllablesJpNormal.length;
-		int syllablesDiacriticalLength = syllablesJpDiacritical.length;
-		int syllablesSmallLength = syllablesJpSmall.length;
+		int syllablesNormalLength = syllablesJpNormalHir.length;
+		int syllablesDiacriticalLength = syllablesJpDiacriticalHir.length;
+		int syllablesSmallLength = syllablesJpSmallHir.length;
 		StringBuilder sb = new StringBuilder(16);
 		String syllable;
 		
@@ -146,10 +180,8 @@ public final class textJPtoEN {
 			syllable = "";
 			found = false;
 			
-			// TODO: handle katakana
-			
 			// Handle 小さい　つ
-			if ( splitInput[ i ].equals("っ") ) {
+			if ( splitInput[ i ].equals("っ") || splitInput[ i ].equals("ッ") ) {
 				doubleLetter = true;
 				continue;
 			}
@@ -157,7 +189,7 @@ public final class textJPtoEN {
 			// Search the small hiragana syllables
 			if (!found) {
 				for ( int j = 0; j < syllablesSmallLength; j++ ) {
-					if ( splitInput[ i ].equals( syllablesJpSmall[ j ] ) ) {
+					if ( splitInput[ i ].equals( syllablesJpSmallHir[ j ] ) || splitInput[ i ].equals( syllablesJpSmallKat[ j ] ) ) {
 						syllable = syllablesEnSmall[ j ];
 						found = true;
 						break;
@@ -168,7 +200,7 @@ public final class textJPtoEN {
 			// Search the diacritical hiragana syllables
 			if (!found) {
 				for ( int j = 0; j < syllablesDiacriticalLength; j++ ) {
-					if ( splitInput[ i ].equals( syllablesJpDiacritical[ j ] ) ) {
+					if ( splitInput[ i ].equals( syllablesJpDiacriticalHir[ j ] ) || splitInput[ i ].equals( syllablesJpDiacriticalKat[ j ] ) ) {
 						syllable = syllablesEnDiacritical[ j ];
 						found = true;
 						break;
@@ -179,7 +211,7 @@ public final class textJPtoEN {
 			// Search the normal hiragana syllables
 			if (!found) {
 				for ( int j = 0; j < syllablesNormalLength; j++ ) {
-					if ( splitInput[ i ].equals( syllablesJpNormal[ j ] ) ) {
+					if ( splitInput[ i ].equals( syllablesJpNormalHir[ j ] ) || splitInput[ i ].equals( syllablesJpNormalKat[ j ] ) ) {
 						syllable = syllablesEnNormal[ j ];
 						found = true;
 						break;
