@@ -47,7 +47,6 @@ public final class textJPtoEN {
 		"りゃ",			"りゅ",			"りょ",
 		"ぎゃ",			"ぎゅ",			"ぎょ",
 		"じゃ",			"じゅ",			"じょ",
-		"ぢゃ",			"ぢゅ",			"ぢょ",
 		"びゃ",			"びゅ",			"びょ",
 		"ぴゃ",			"ぴゅ",			"ぴょ"
 	};
@@ -81,7 +80,6 @@ public final class textJPtoEN {
 		"リャ",			"リュ",			"リョ",
 		"ギャ",			"ギュ",			"ギョ",
 		"ジャ",			"ジュ",			"ジョ",
-		"ヂャ",			"ヂュ",			"ヂョ",
 		"ビャ",			"ビュ",			"ビョ",
 		"ピャ",			"ピュ",			"ピョ"
 	};
@@ -99,15 +97,13 @@ public final class textJPtoEN {
 										"n"
 	};
 	private final static String[] syllablesEnDiacritical = {
-		// TODO: double-check Genki I for these pronunciations
 		"ga",	"gi",	"gu",	"ge",	"go",
 		"za",	"ji",	"zu",	"ze",	"zo",
-		"da",	"chi",	"dzu",	"de",	"do",
+		"da",	"chi",	"zu",	"de",	"do",
 		"ba",	"bi",	"bu",	"be",	"bo",
 		"pa",	"pi",	"pu",	"pe",	"po"
 	};
 	private final static String[] syllablesEnSmall = {
-		// TODO: double-check Genki I for these pronunciations
 		"kya",			"kyu",			"kyo",
 		"sha",			"shu",			"sho",
 		"cha",			"chu",			"cho",
@@ -116,8 +112,7 @@ public final class textJPtoEN {
 		"mya",			"myu",			"myo",
 		"rya",			"ryu",			"ryo",
 		"gya",			"gyu",			"gyo",
-		"jya",			"jyu",			"jyo",
-		"jya",			"jyu",			"jyo",
+		"ja",			"ju",			"jo",
 		"bya",			"byu",			"byo",
 		"pya",			"pyu",			"pyo"
 	};
